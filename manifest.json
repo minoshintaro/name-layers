@@ -1,0 +1,11 @@
+{
+  "name": "Name Layers",
+  "id": "1270021574725531926",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": [
+    "figma"
+  ]
+}
