@@ -1,15 +1,24 @@
 import { createAlignmentName, createComponentContainerName, createContainerName, createFlowName, createItemName, createWrapperName } from "./createName";
 import { createSizingModifier } from "./createModifier";
 import { getFrames } from "./getFrames";
-import { regexPatterns } from "./regexPatterns";
+import { regexPatterns, isReservedName } from "./regexPatterns";
 
 for (const node of figma.currentPage.selection) {
   if (node.type !== 'SECTION' && node.type !== 'COMPONENT_SET' && node.type !== 'COMPONENT' && node.type !== 'FRAME') continue;
 
   for (const frame of getFrames(node)) {
+
+    // [0] Reset
+    if (isReservedName(frame.name)) {
+      frame.name = 'Frame';
+    } else {
+      continue;
+    }
+
     const { name, parent, children, minWidth, maxWidth, layoutMode, layoutWrap, primaryAxisAlignItems, counterAxisAlignItems } = frame;
     const sizingModifier = createSizingModifier(minWidth, maxWidth);
 
+    // [1] As a child element
     if (parent) {
       if (parent.type === 'PAGE' || parent.type === 'SECTION') {
         frame.name = createWrapperName(name);
@@ -22,25 +31,18 @@ for (const node of figma.currentPage.selection) {
 
     if (frame.name !== name) continue;
 
+    // [2] As a container
+
     if (sizingModifier) {
       frame.name = createContainerName(name, layoutMode, children.length, sizingModifier);
-      continue;
+    } else {
+      frame.name = createAlignmentName(name, layoutMode, primaryAxisAlignItems, counterAxisAlignItems, children.length);
     }
 
-    const alignment = createAlignmentName(name, layoutMode, primaryAxisAlignItems, counterAxisAlignItems, children.length);
-    if (alignment !== name) {
-      frame.name = alignment;
-      continue;
-    }
+    // [3] Still the default name
 
-    const direction = createFlowName(name, layoutMode, layoutWrap);
-    if (direction !== name) {
-      frame.name = direction;
-      continue;
-    }
-
-    if (regexPatterns.frame.test(name)) {
-      frame.name = 'Frame';
+    if (frame.name === 'Frame') {
+      frame.name = createFlowName(name, layoutMode, layoutWrap);
     }
   }
 }

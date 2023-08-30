@@ -1,7 +1,7 @@
 import { regexPatterns } from "./regexPatterns";
 
 export function createWrapperName(currentName: string): string {
-  return regexPatterns.frame.test(currentName) ? 'wrapper' : currentName;
+  return regexPatterns.frameName.test(currentName) ? 'wrapper' : currentName;
 }
 
 export function createComponentContainerName(currentName: string, siblingCount: number, modifier: string | null): string {
@@ -23,6 +23,7 @@ export function createAlignmentName(currentName: string, selfMode: string, prima
         switch (primaryAxis) {
           case 'CENTER': return 'center';
           case 'MAX': return 'right';
+          case 'SPACE_BETWEEN': return 'distribution';
         }
       }
       break;
@@ -44,7 +45,7 @@ export function createAlignmentName(currentName: string, selfMode: string, prima
 export function createFlowName(currentName: string, selfMode: string, wrap: string): string {
   switch (selfMode) {
     case 'HORIZONTAL': return wrap === 'WRAP' ? 'wrap' : 'row';
-    case 'VERTICAL': return 'col';
+    case 'VERTICAL': return 'column';
     default: return currentName;
   }
 }
