@@ -7,5 +7,11 @@
   "enableProposedApi": false,
   "editorType": [
     "figma"
+  ],
+  "menu": [
+    { "name": "Set Names", "command": "setName" },
+    { "name": "Reset Names", "command": "resetName" },
+    { "separator": true },
+    { "name": "Reset Names of All Frames", "command": "resetAllNames" }
   ]
 }
