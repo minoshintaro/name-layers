@@ -1,8 +1,8 @@
 export const regexPatterns = {
   frameName: /^Frame(?: [0-9]{1,9})?$/,
-  conventionalName: /^(wrapper|container|item|column|row|wrap|center|right)\b/
+  conventionalName: /^(wrapper|container|item|column|col|row|wrap|center|right|space)\b/
 }
 
-export const isReservedName = (target) => {
-  return regexPatterns.frameName.test(target) || regexPatterns.conventionalName.test(target);
+export const isReservedName = (targetName) => {
+  return regexPatterns.frameName.test(targetName) || regexPatterns.conventionalName.test(targetName);
 }
