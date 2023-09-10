@@ -8,7 +8,7 @@
     "vite:watch": "vite build --watch",
     "vite:build": "vite build",
     "lint:src": "eslint src/*.ts",
-    "lint:dist": "eslint dist/code.js"
+    "lint:dist": "eslint --fix dist/code.js"
   },
   "author": "",
   "license": "",
