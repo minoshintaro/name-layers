@@ -1,5 +1,4 @@
 export type TargetNode = SectionNode | ComponentSetNode | ComponentNode | FrameNode;
-export type AutoLayoutNode = ComponentSetNode | ComponentNode | FrameNode | InferredAutoLayoutResult | InstanceNode;
 
 export type Name = string | null;
 

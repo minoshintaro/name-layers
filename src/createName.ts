@@ -1,49 +1,37 @@
-import { hasSimilarFrames } from "./boolean";
 import { Name, LayoutMode, LayoutWrap, PrimaryAxisAlignItems, CounterAxisAlignItems } from "./type";
+import { hasSimilarFrames } from "./boolean";
 
-export function createComponentContainerName(siblingCount: number, modifier: Name): Name {
+export function createNameAsComponentContainer(siblingCount: number, modifier: Name): Name {
   return siblingCount === 1 ? `container ${modifier || ''}`.trim() : null;
 }
 
-export function createContainerName(selfMode: LayoutMode, childrenCount: number, modifier: Name): Name {
-  return (selfMode === 'VERTICAL' || (selfMode === 'HORIZONTAL' && childrenCount <= 2)) ? `container ${modifier || ''}`.trim() : null;
+export function createNameAsContainer(selfMode: LayoutMode, childrenCount: number, modifier: Name): Name {
+  return selfMode === 'VERTICAL' || (selfMode === 'HORIZONTAL' && childrenCount <= 2) ? `container ${modifier || ''}`.trim() : null;
 }
 
-export function createItemName(siblings: SceneNode[], parentMode: LayoutMode, modifier: Name): Name {
+export function createNameAsItem(siblings: SceneNode[], parentMode: LayoutMode, modifier: Name): Name {
   return hasSimilarFrames(siblings) && parentMode === 'HORIZONTAL' ? `item ${modifier || ''}`.trim() : null;
 }
 
-export function createSpaceName(fills: ReadonlyArray<Paint> | typeof figma.mixed): Name {
+export function createNameAsSpace(fills: ReadonlyArray<Paint> | typeof figma.mixed): Name {
   return Array.isArray(fills) && !fills.length ? 'space' : null;
 }
 
-export function createAlignmentName(selfMode: LayoutMode, primary: PrimaryAxisAlignItems, counter: CounterAxisAlignItems, childrenCount: number): Name {
-  switch (selfMode) {
-    case 'HORIZONTAL': {
-      if (childrenCount <= 2) {
-        switch (primary) {
-          case 'CENTER': return 'center';
-          case 'MAX': return 'right';
-          case 'SPACE_BETWEEN': return 'evenly';
-        }
-      }
-      break;
-    }
-    case 'VERTICAL': {
-      if (childrenCount <= 1) {
-        switch (counter) {
-          case 'CENTER': return 'center';
-          case 'MAX': return 'right';
-        }
-      }
-      break;
-    }
-    default: break;
+export function createNameAsAlignment(selfMode: LayoutMode, primary: PrimaryAxisAlignItems, counter: CounterAxisAlignItems, childrenCount: number): Name {
+  const getAlignment = () => {
+    if (selfMode === 'HORIZONTAL' && childrenCount <= 2) return primary;
+    if (selfMode === 'VERTICAL' && childrenCount <= 1) return counter;
+    return 'NONE';
+  };
+  switch (getAlignment()) {
+    case 'CENTER': return 'center';
+    case 'MAX': return 'right';
+    case 'SPACE_BETWEEN': return 'evenly';
+    default: return null;
   }
-  return null;
 }
 
-export function createFlowName(selfMode: LayoutMode, wrap: LayoutWrap): Name {
+export function createNameAsFlow(selfMode: LayoutMode, wrap: LayoutWrap): Name {
   switch (selfMode) {
     case 'HORIZONTAL': return wrap === 'WRAP' ? 'wrap' : 'row';
     case 'VERTICAL': return 'column';
