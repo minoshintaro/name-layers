@@ -7,7 +7,8 @@ figma.on('run', ({ command }: RunEvent) => {
     const { type } = node;
     if (type !== 'SECTION' && type !== 'COMPONENT_SET' && type !== 'COMPONENT' && type !== 'FRAME') continue;
 
-    for (const frame of getAllFrames(node)) {
+    const frames = getAllFrames(node);
+    for (const frame of frames) {
       const { name, minWidth, maxWidth } = frame;
       const sizingModifier = createSizingModifier(minWidth, maxWidth);
 

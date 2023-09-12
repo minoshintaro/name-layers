@@ -1,5 +1,5 @@
 import { Name } from "./type";
-import { createNameAsAlignment, createNameAsComponentContainer, createNameAsContainer, createNameAsFlow, createNameAsItem, createNameAsSpace } from "./createName";
+import { createNameAsAlignment, createNameAsComponentContainer, createNameAsContainer, createNameAsFlow, createNameAsItem, createNameAsSpace, createNameAsImage } from "./createName";
 
 export function getAllFrames(node: SceneNode): FrameNode[] {
   const subNodes = 'findAllWithCriteria' in node ? node.findAllWithCriteria({ types: ['FRAME'] }) : [];
@@ -18,7 +18,8 @@ export function getNameAsElement(node: FrameNode, modifier: Name): Name {
     } else if (parent.type === 'COMPONENT') {
       return createNameAsComponentContainer(parent.children.length, modifier);
     } else if ('layoutMode' in parent) {
-      return children.length ? createNameAsItem(getChildFrames(parent), parent.layoutMode, modifier) : createNameAsSpace(fills);
+      const siblings = getChildFrames(parent);
+      return createNameAsItem(siblings, parent.layoutMode, children.length, modifier) || createNameAsSpace(fills, children.length)|| createNameAsImage(fills, children.length);
     }
   }
   return null;

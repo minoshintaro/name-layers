@@ -1,4 +1,4 @@
-import { Name, LayoutMode, LayoutWrap, PrimaryAxisAlignItems, CounterAxisAlignItems } from "./type";
+import { Name, Fills, LayoutMode, LayoutWrap, PrimaryAxisAlignItems, CounterAxisAlignItems } from "./type";
 import { hasSimilarFrames } from "./boolean";
 
 export function createNameAsComponentContainer(siblingCount: number, modifier: Name): Name {
@@ -9,12 +9,16 @@ export function createNameAsContainer(selfMode: LayoutMode, childrenCount: numbe
   return selfMode === 'VERTICAL' || (selfMode === 'HORIZONTAL' && childrenCount <= 2) ? `container ${modifier || ''}`.trim() : null;
 }
 
-export function createNameAsItem(siblings: SceneNode[], parentMode: LayoutMode, modifier: Name): Name {
-  return hasSimilarFrames(siblings) && parentMode === 'HORIZONTAL' ? `item ${modifier || ''}`.trim() : null;
+export function createNameAsItem(siblings: SceneNode[], parentMode: LayoutMode, childrenCount: number, modifier: Name): Name {
+  return childrenCount && parentMode === 'HORIZONTAL' && hasSimilarFrames(siblings) ? `item ${modifier || ''}`.trim() : null;
 }
 
-export function createNameAsSpace(fills: ReadonlyArray<Paint> | typeof figma.mixed): Name {
-  return Array.isArray(fills) && !fills.length ? 'space' : null;
+export function createNameAsSpace(fills: Fills, childrenCount: number): Name {
+  return !childrenCount && Array.isArray(fills) && !fills.length ? 'space' : null;
+}
+
+export function createNameAsImage(fills: Fills, childrenCount: number): Name {
+  return !childrenCount && Array.isArray(fills) && fills.some(fill => fill.type === 'IMAGE') ? 'image' : null;
 }
 
 export function createNameAsAlignment(selfMode: LayoutMode, primary: PrimaryAxisAlignItems, counter: CounterAxisAlignItems, childrenCount: number): Name {
