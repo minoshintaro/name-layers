@@ -1,33 +1,30 @@
 import { isReservedName } from "./boolean";
-import { getAllFrames, getNameAsElement, getNameAsContainer, getNameAsAutoLayout } from "./get";
+import { getAllFrames } from "./get";
 import { createSizingModifier } from "./createModifier";
+import { createNameAsElement } from "./createNameAsElement";
+import { createNameAsChild } from "./createNameAsChild";
+import { createNameAsContainer } from "./createNameAsContainer";
 
 figma.on('run', ({ command }: RunEvent) => {
-  for (const node of figma.currentPage.selection) {
-    const { type } = node;
+  for (const selectedNode of figma.currentPage.selection) {
+    const { type } = selectedNode;
     if (type !== 'SECTION' && type !== 'COMPONENT_SET' && type !== 'COMPONENT' && type !== 'FRAME') continue;
 
-    const frames = getAllFrames(node);
-    for (const frame of frames) {
-      const { name, minWidth, maxWidth } = frame;
-      const sizingModifier = createSizingModifier(minWidth, maxWidth);
+    for (const frame of getAllFrames(selectedNode)) {
+      if (frame.type !== 'FRAME') continue;
 
-      switch (command) {
-        case 'resetAllNames': {
-          frame.name = 'Frame';
-          break;
+      const { name, minWidth, maxWidth } = frame;
+      const modifier = createSizingModifier(minWidth, maxWidth);
+      const generateNewName = (): string => {
+        switch (command) {
+          case 'resetAllNames': return 'Frame';
+          case 'resetName': return isReservedName(name) ? 'Frame' : name;
+          case 'setName': return isReservedName(name) ? createNameAsElement(frame, modifier) || createNameAsChild(frame, modifier) || createNameAsContainer(frame, modifier) || 'Frame' : name;
+          default: return name;
         }
-        case 'resetName': {
-          frame.name = isReservedName(name) ? 'Frame' : name;
-          break;
-        }
-        case 'setName': {
-          if (!isReservedName(name)) break;
-          frame.name = getNameAsElement(frame, sizingModifier) || getNameAsContainer(frame, sizingModifier) || getNameAsAutoLayout(frame) || 'Frame';
-          break;
-        }
-        default: break;
-      }
+      };
+
+      frame.name = generateNewName();
     }
   }
   figma.closePlugin('Renamed');
