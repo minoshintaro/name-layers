@@ -11,7 +11,7 @@ export function createNameAsContainer(node: FrameNode, option: string | null): s
     switch (findAlignment({ selfMode: layoutMode, childrenCount: children.length, primaryAlignment: primaryAxisAlignItems, counterAlignment: counterAxisAlignItems })) {
       case 'CENTER': return 'center';
       case 'MAX': return 'right';
-      case 'SPACE_BETWEEN': return 'evenly';
+      case 'SPACE_BETWEEN': return 'justification';
       default: break;
     }
 
