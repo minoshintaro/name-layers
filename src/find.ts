@@ -24,3 +24,21 @@ export function findSamePropNodes(nodes: SceneNode[], option?: LayoutMode): Scen
     !option || isSameSize(node.width, node.height)
   ));
 }
+
+
+export function findSamePropNodes1(nodes: SceneNode[], option?: LayoutMode): SceneNode[] {
+  const { width: baseW, height: baseH } = nodes[0];
+  const isSameSize = (w: number, h: number): boolean => {
+    switch (option) {
+      case 'HORIZONTAL': return w === baseW;
+      case 'VERTICAL': return h === baseH;
+      default: return false;
+    }
+  };
+  return nodes.filter(node => (
+    node.type === 'FRAME' &&
+    node.children.length > 0 &&
+    node.layoutPositioning === 'AUTO' &&
+    !option || isSameSize(node.width, node.height)
+  ));
+}

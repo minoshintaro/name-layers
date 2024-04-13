@@ -9,9 +9,9 @@
     "figma"
   ],
   "menu": [
-    { "name": "Set Names", "command": "setName" },
-    { "name": "Reset Names", "command": "resetName" },
+    { "name": "Set Names", "command": "SET_NAME" },
+    { "name": "Reset Names", "command": "RESET_NAME" },
     { "separator": true },
-    { "name": "Reset Names of All Frames", "command": "resetAllNames" }
+    { "name": "Reset Names of All Frames", "command": "RESET_ALL_NAMES" }
   ]
 }

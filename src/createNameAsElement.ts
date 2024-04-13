@@ -1,4 +1,4 @@
-export function createNameAsElement(node: FrameNode, option: string | null): string | null {
+export function createNameAsElement(node: FrameNode): string | null {
   const { children, fills } = node;
 
   // [1] image | space
