@@ -8,7 +8,7 @@ export function isReservedName(input: string): boolean {
 }
 
 export function isTargetType(input: string): boolean {
-  const targets = ['SECTION', 'COMPONENT_SET', 'COMPONENT', 'FRAME'];
+  const targets = ['SECTION', 'GROUP', 'COMPONENT_SET', 'COMPONENT', 'FRAME'];
   return targets.includes(input);
 }
 
