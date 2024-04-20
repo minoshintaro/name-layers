@@ -3,7 +3,7 @@ import { NAME } from "../settings";
 export function generateNameAsStack(node: FrameNode): string | null {
   if (
     // 子
-    node.children.length > 0 &&
+    node.children.length > 1 &&
     // 自身
     node.layoutMode === 'VERTICAL' &&
     // 親
