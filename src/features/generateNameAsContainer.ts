@@ -1,5 +1,6 @@
 import { NAME } from "../settings";
-import { isCenterAligned, hasContainerAncestor } from "./check";
+import { isCenterAligned } from "../utils/check";
+import { hasContainerAncestor } from "../utils/hasAncestor";
 
 export function generateNameAsContainer(node: FrameNode): string | null {
   if (
@@ -14,9 +15,8 @@ export function generateNameAsContainer(node: FrameNode): string | null {
     // 先祖
     !hasContainerAncestor(node)
   ) {
-    console.log('test: generateNameAsContainer =>', 1);
-    return `${NAME.container} ${NAME.maxWidth}-${node.maxWidth}`;
-    // return NAME.container;
+    // return `${NAME.container} ${NAME.maxWidth}-${node.maxWidth}`;
+    return NAME.container;
   }
   return null;
 }

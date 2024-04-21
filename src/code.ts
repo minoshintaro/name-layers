@@ -1,12 +1,13 @@
 import { DEFAULT } from "./settings";
-import { isReservedName } from "./features/check";
 import { collectNodesInSelection } from "./features/collectNodesInSelection";
 import { generateNameAsContainer } from "./features/generateNameAsContainer";
 import { generateNameAsElement } from "./features/generateNameAsElement";
 import { generateNameAsFlow } from "./features/generateNameAsFlow";
 import { generateNameAsItem } from "./features/generateNameAsItem";
+import { generateNameAsModifier } from "./features/generateNameAsModifier";
+import { generateNameAsRoot } from "./features/generateNameAsRoot";
 import { generateNameAsStack } from "./features/generateNameAsStack";
-import { generateNameAsWrapper } from "./features/generateNameAsWrapper";
+import { matchWithReservedNames } from "./features/matchWithReservedNames";
 
 figma.skipInvisibleInstanceChildren = true;
 
@@ -21,25 +22,33 @@ figma.on('run', ({ command }: RunEvent) => {
         if (node.type === 'RECTANGLE') node.name = DEFAULT.rectangle;
         break;
       case 'RESET_NAME':
-        if (node.type === 'FRAME' && isReservedName(node.name)) node.name = DEFAULT.frame;
-        if (node.type === 'RECTANGLE' && isReservedName(node.name)) node.name = DEFAULT.rectangle;
+        if (node.type === 'FRAME' && matchWithReservedNames(node.name)) node.name = DEFAULT.frame;
+        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name)) node.name = DEFAULT.rectangle;
         break;
       case 'SET_NAME':
-        if (node.type === 'FRAME' /* && isReservedName(node.name) */) {
+        if (node.type === 'FRAME' && matchWithReservedNames(node.name)) {
           node.name =
             generateNameAsElement(node) ||
             generateNameAsItem(node) ||
-            generateNameAsWrapper(node) ||
+            generateNameAsRoot(node) ||
             generateNameAsContainer(node) ||
             generateNameAsStack(node) ||
             generateNameAsFlow(node) ||
             DEFAULT.frame;
         }
+
         if (node.type === 'RECTANGLE') {
           node.name =
             generateNameAsElement(node) ||
             DEFAULT.rectangle;
         }
+
+        const modifier = generateNameAsModifier(node);
+        if (modifier) node.name = (
+          node.name === DEFAULT.frame ||
+          node.name === DEFAULT.rectangle
+        ) ? modifier : `${node.name} ${modifier}`;
+
         break;
       default:
         break;

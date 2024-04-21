@@ -4,18 +4,20 @@ export const DEFAULT = {
 }
 
 export const NAME = {
-  row: 'row',
+  root: 'page',
+  container: 'container',
+  stack: 'stack',
   col: 'col',
+  row: 'row',
   wrap: 'wrap',
   item: 'item',
   image: 'image',
   space: 'space',
-  wrapper: 'wrapper',
-  container: 'container',
-  stack: 'stack',
+  line: 'line',
   center: 'center',
   right: 'right',
   justification: 'justification',
+  minWidth: 'min',
   maxWidth: 'max',
 };
 
@@ -26,7 +28,7 @@ export const TAILWIND_NAME = {
   item: 'item',
   image: 'image',
   space: 'space',
-  wrapper: 'wrapper',
+  root: 'wrapper',
   container: 'container',
   stack: 'space-y',
   center: 'center',

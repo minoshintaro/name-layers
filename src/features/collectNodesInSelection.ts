@@ -1,4 +1,4 @@
-import { hasInstanceAncestor } from "./check";
+import { hasInstanceAncestor } from "../utils/hasAncestor";
 
 // typesWithChildren: ['BOOLEAN_OPERATION', 'INSTANCE', 'COMPONENT', 'COMPONENT_SET', 'FRAME', 'GROUP', 'SECTION', 'PAGE'];
 

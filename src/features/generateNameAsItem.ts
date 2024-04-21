@@ -1,5 +1,5 @@
 import { NAME } from "../settings";
-import { isSameWidth } from "./check";
+import { isSameWidth } from "../utils/check";
 
 export function generateNameAsItem(node: FrameNode): string | null {
   if (

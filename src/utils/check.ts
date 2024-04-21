@@ -1,14 +1,5 @@
 // Is
 
-export function isReservedName(input: string): boolean {
-  const patterns = [
-    /^Frame( \d{1,9})?$/,
-    /^(wrapper|container|column|row|wrap|center|right|justification|item|space|image)\b/
-  ];
-
-  return patterns.some(pattern => pattern.test(input));
-}
-
 export function isImageFill(props: ReadonlyArray<Paint>): boolean {
   return props.some(prop => prop.type === 'IMAGE');
 }
@@ -37,31 +28,4 @@ export function isHorizontally(node: BaseNode): boolean {
 }
 export function isVertically(node: BaseNode): boolean {
   return isAutoLayout(node, (target) => target.layoutMode === 'VERTICAL');
-}
-
-
-// Has
-// hasChildrenTypes: ['BOOLEAN_OPERATION', 'INSTANCE', 'COMPONENT', 'COMPONENT_SET', 'FRAME', 'GROUP', 'SECTION', 'PAGE'];
-
-function hasAncestor(node: SceneNode, callback: (ancestor: SceneNode) => boolean): boolean {
-  let current = node.parent;
-  while (current && 'visible' in current) {
-    if (callback(current)) return true;
-    current = current.parent;
-  }
-  return false;
-}
-export function hasInstanceAncestor(node: SceneNode): boolean {
-  return hasAncestor(node, (ancestor) => ancestor.type === 'INSTANCE');
-}
-export function hasContainerAncestor(node: SceneNode): boolean {
-  return hasAncestor(node, (ancestor) => (
-    // 自身
-    ancestor.type === 'FRAME' &&
-    ancestor.layoutMode !== 'NONE' &&
-    ancestor.maxWidth !== null &&
-    // 親
-    ancestor.parent !== null &&
-    isCenterAligned(ancestor.parent)
-  ));
 }
