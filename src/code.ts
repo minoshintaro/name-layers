@@ -43,11 +43,13 @@ figma.on('run', ({ command }: RunEvent) => {
             DEFAULT.rectangle;
         }
 
-        const modifier = generateNameAsModifier(node);
-        if (modifier) node.name = (
-          node.name === DEFAULT.frame ||
-          node.name === DEFAULT.rectangle
-        ) ? modifier : `${node.name} ${modifier}`;
+        {
+          const modifier = generateNameAsModifier(node);
+          if (modifier) node.name = (
+            node.name === DEFAULT.frame ||
+            node.name === DEFAULT.rectangle
+          ) ? modifier : `${node.name} ${modifier}`;
+        }
 
         break;
       default:
@@ -55,5 +57,5 @@ figma.on('run', ({ command }: RunEvent) => {
     }
   }
 
-  figma.closePlugin('Test');
+  figma.closePlugin('Renamed');
 });
