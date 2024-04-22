@@ -1,6 +1,8 @@
-import { NAME } from "../settings";
+import { LayerName, EMPTY } from "../settings";
 
-export function generateNameAsStack(node: FrameNode): string | null {
+export function generateNameAsStack(node: FrameNode, nameGroup: LayerName): string | null {
+  const stack = nameGroup.stack === EMPTY ? null : nameGroup.stack;
+
   if (
     // 子
     node.children.length > 1 &&
@@ -11,7 +13,8 @@ export function generateNameAsStack(node: FrameNode): string | null {
     (node.parent.type === 'FRAME' || node.parent.type === 'COMPONENT' || node.parent.type === 'COMPONENT_SET') &&
     node.parent.layoutMode === 'VERTICAL'
   ) {
-    return NAME.stack
+    return stack;
   }
+
   return null;
 }

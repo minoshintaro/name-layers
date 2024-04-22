@@ -1,8 +1,10 @@
-import { NAME } from "../settings";
+import { LayerName, EMPTY } from "../settings";
 import { isCenterAligned } from "../utils/check";
 import { hasContainerAncestor } from "../utils/hasAncestor";
 
-export function generateNameAsContainer(node: FrameNode): string | null {
+export function generateNameAsContainer(node: FrameNode, nameGroup: LayerName): string | null {
+  const container = nameGroup.container === EMPTY ? null : nameGroup.container;
+
   if (
     // 子
     node.children.length > 0 &&
@@ -16,7 +18,7 @@ export function generateNameAsContainer(node: FrameNode): string | null {
     !hasContainerAncestor(node)
   ) {
     // return `${NAME.container} ${NAME.maxWidth}-${node.maxWidth}`;
-    return NAME.container;
+    return container;
   }
   return null;
 }

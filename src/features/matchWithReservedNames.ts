@@ -1,9 +1,9 @@
-import { DEFAULT, NAME } from "../settings";
+import { LayerName, DEFAULT_NAME } from "../settings";
 import { removeSuffixNumber } from "../utils/removeSuffixNumber";
 
-export function matchWithReservedNames(input: string): boolean {
-  const defaultNames = Object.values(DEFAULT);
-  const reservedNames = Object.values(NAME);
+export function matchWithReservedNames(input: string, nameGroup: LayerName): boolean {
+  const defaultNames = Object.values(DEFAULT_NAME);
+  const reservedNames = Object.values(nameGroup);
   const splitNames = input.split(' ');
 
   return (

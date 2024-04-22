@@ -1,9 +1,14 @@
-export const DEFAULT = {
+export const COLLECTION_NAME: string = 'Layer names';
+export const EMPTY: string = '-';
+
+export interface LayerName {
+  [key: string]: string;
+}
+export const DEFAULT_NAME: LayerName = {
   frame: 'Frame',
   rectangle: 'Rectangle',
 }
-
-export const NAME = {
+export const LAYER_NAME: LayerName = {
   root: 'page',
   container: 'container',
   stack: 'stack',
@@ -19,20 +24,4 @@ export const NAME = {
   justification: 'justification',
   minWidth: 'min',
   maxWidth: 'max',
-};
-
-export const TAILWIND_NAME = {
-  row: 'flex-row',
-  col: 'flex-col',
-  wrap: 'flex-wrap',
-  item: 'item',
-  image: 'image',
-  space: 'space',
-  root: 'wrapper',
-  container: 'container',
-  stack: 'space-y',
-  center: 'center',
-  right: 'right',
-  justification: 'justification',
-  maxWidth: 'max-w',
 };

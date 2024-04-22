@@ -1,7 +1,9 @@
-import { NAME } from "../settings";
+import { LayerName, EMPTY } from "../settings";
 import { isSameWidth } from "../utils/check";
 
-export function generateNameAsItem(node: FrameNode): string | null {
+export function generateNameAsItem(node: FrameNode, nameGroup: LayerName): string | null {
+  const item = nameGroup.item === EMPTY ? null : nameGroup.item;
+
   if (
     node.children.length > 0 &&
     node.parent !== null &&
@@ -10,7 +12,7 @@ export function generateNameAsItem(node: FrameNode): string | null {
     node.parent.children.length > 2 &&
     isSameWidth(node.parent.children)
   ) {
-    return NAME.item;
+    return item;
   }
   return null;
 }

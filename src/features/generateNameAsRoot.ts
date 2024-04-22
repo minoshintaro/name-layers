@@ -1,6 +1,8 @@
-import { NAME } from "../settings";
+import { LayerName, EMPTY } from "../settings";
 
-export function generateNameAsRoot(node: FrameNode): string | null {
+export function generateNameAsRoot(node: FrameNode, nameGroup: LayerName): string | null {
+  const root = nameGroup.root === EMPTY ? null : nameGroup.root;
+
   if (
     // 子
     node.children.length > 0 &&
@@ -10,7 +12,8 @@ export function generateNameAsRoot(node: FrameNode): string | null {
     node.parent !== null &&
     (node.parent.type === 'PAGE' || node.parent.type === 'SECTION')
   ) {
-   return NAME.root;
+   return root;
   }
+
   return null;
 }

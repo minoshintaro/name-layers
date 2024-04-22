@@ -1,4 +1,4 @@
-import { DEFAULT } from "./settings";
+import { LayerName, COLLECTION_NAME, DEFAULT_NAME, LAYER_NAME } from "./settings";
 import { collectNodesInSelection } from "./features/collectNodesInSelection";
 import { generateNameAsContainer } from "./features/generateNameAsContainer";
 import { generateNameAsElement } from "./features/generateNameAsElement";
@@ -7,55 +7,75 @@ import { generateNameAsItem } from "./features/generateNameAsItem";
 import { generateNameAsModifier } from "./features/generateNameAsModifier";
 import { generateNameAsRoot } from "./features/generateNameAsRoot";
 import { generateNameAsStack } from "./features/generateNameAsStack";
+import { getDataInVariableCollection } from "./features/getDataInVariableCollection";
 import { matchWithReservedNames } from "./features/matchWithReservedNames";
+import { setLocalVars } from "./features/setLocalVars";
 
 figma.skipInvisibleInstanceChildren = true;
 
-figma.on('run', ({ command }: RunEvent) => {
+figma.on('run', async ({ command }: RunEvent) => {
+  const variableCollections = await figma.variables.getLocalVariableCollectionsAsync();
   const targetNodes = collectNodesInSelection(['FRAME', 'RECTANGLE']);
-  if (targetNodes.length === 0) figma.closePlugin('No frames in your selection');
 
-  for (const node of targetNodes) {
-    switch (command) {
-      case 'RESET_ALL_NAMES':
-        if (node.type === 'FRAME') node.name = DEFAULT.frame;
-        if (node.type === 'RECTANGLE') node.name = DEFAULT.rectangle;
-        break;
-      case 'RESET_NAME':
-        if (node.type === 'FRAME' && matchWithReservedNames(node.name)) node.name = DEFAULT.frame;
-        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name)) node.name = DEFAULT.rectangle;
-        break;
-      case 'SET_NAME':
-        if (node.type === 'FRAME' && matchWithReservedNames(node.name)) {
+  const overriddenName: LayerName | null = await getDataInVariableCollection(variableCollections, COLLECTION_NAME);
+  const nameGroup: LayerName = overriddenName || LAYER_NAME;
+
+  switch (command) {
+    case 'OVERRIDE_NAMES':
+      if (overriddenName) {
+        figma.closePlugin('Already overridden');
+      } else {
+        setLocalVars();
+        figma.closePlugin('Create local variables');
+      }
+      break;
+
+    case 'RESET_ALL_NAMES':
+      for (const node of targetNodes) {
+        if (node.type === 'FRAME') node.name = DEFAULT_NAME.frame;
+        if (node.type === 'RECTANGLE') node.name = DEFAULT_NAME.rectangle;
+      }
+      break;
+
+    case 'RESET_NAMES':
+      for (const node of targetNodes) {
+        if (node.type === 'FRAME' && matchWithReservedNames(node.name, nameGroup)) node.name = DEFAULT_NAME.frame;
+        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name, nameGroup)) node.name = DEFAULT_NAME.rectangle;
+      }
+      break;
+
+    case 'SET_NAMES':
+      for (const node of targetNodes) {
+        if (node.type === 'FRAME' && matchWithReservedNames(node.name, nameGroup)) {
           node.name =
-            generateNameAsElement(node) ||
-            generateNameAsItem(node) ||
-            generateNameAsRoot(node) ||
-            generateNameAsContainer(node) ||
-            generateNameAsStack(node) ||
-            generateNameAsFlow(node) ||
-            DEFAULT.frame;
+            generateNameAsElement(node, nameGroup) ||
+            generateNameAsItem(node, nameGroup) ||
+            generateNameAsRoot(node, nameGroup) ||
+            generateNameAsContainer(node, nameGroup) ||
+            generateNameAsStack(node, nameGroup) ||
+            generateNameAsFlow(node, nameGroup) ||
+            DEFAULT_NAME.frame;
         }
 
-        if (node.type === 'RECTANGLE') {
+        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name, nameGroup)) {
           node.name =
-            generateNameAsElement(node) ||
-            DEFAULT.rectangle;
+            generateNameAsElement(node, nameGroup) ||
+            DEFAULT_NAME.rectangle;
         }
 
         {
-          const modifier = generateNameAsModifier(node);
+          const modifier = generateNameAsModifier(node, nameGroup);
           if (modifier) node.name = (
-            node.name === DEFAULT.frame ||
-            node.name === DEFAULT.rectangle
+            node.name === DEFAULT_NAME.frame ||
+            node.name === DEFAULT_NAME.rectangle
           ) ? modifier : `${node.name} ${modifier}`;
         }
+      }
+      break;
 
-        break;
-      default:
-        break;
-    }
+    default:
+      break;
   }
 
-  figma.closePlugin('Renamed');
+  figma.closePlugin(targetNodes.length > 0 ? 'Renamed' : 'No frames in your selection');
 });

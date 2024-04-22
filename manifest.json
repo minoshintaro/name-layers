@@ -9,9 +9,11 @@
     "figma"
   ],
   "menu": [
-    { "name": "Set Names", "command": "SET_NAME" },
-    { "name": "Reset Names", "command": "RESET_NAME" },
+    { "name": "Set Names", "command": "SET_NAMES" },
+    { "name": "Reset Names", "command": "RESET_NAMES" },
     { "separator": true },
-    { "name": "Reset Names of All Frames", "command": "RESET_ALL_NAMES" }
+    { "name": "Reset Names of All Frames", "command": "RESET_ALL_NAMES" },
+    { "separator": true },
+    { "name": "Override Names by Local Variables", "command": "OVERRIDE_NAMES" }
   ]
 }
