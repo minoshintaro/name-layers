@@ -14,11 +14,10 @@ import { setLocalVars } from "./features/setLocalVars";
 figma.skipInvisibleInstanceChildren = true;
 
 figma.on('run', async ({ command }: RunEvent) => {
-  const variableCollections = await figma.variables.getLocalVariableCollectionsAsync();
-  const targetNodes = collectNodesInSelection(['FRAME', 'RECTANGLE']);
-
-  const overriddenName: LayerName | null = await getDataInVariableCollection(variableCollections, COLLECTION_NAME);
+  const overriddenName: LayerName | null = await getDataInVariableCollection(COLLECTION_NAME);
   const nameGroup: LayerName = overriddenName || LAYER_NAME;
+  const targetNodes = collectNodesInSelection(['FRAME', 'RECTANGLE']);
+  // let newName: string;
 
   switch (command) {
     case 'OVERRIDE_NAMES':
