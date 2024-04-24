@@ -1,5 +1,5 @@
 import { LayerName, EMPTY } from "../settings";
-import { isCenterAligned } from "../utils/check";
+import { isCenterAligned } from "../utils/isAutoLayout";
 import { hasContainerAncestor } from "../utils/hasAncestor";
 
 export function generateNameAsContainer(node: FrameNode, nameGroup: LayerName): string | null {

@@ -1,5 +1,5 @@
 import { LayerName, EMPTY } from "../settings";
-import { isImageFill } from "../utils/check";
+import { isImageFill } from "../utils/isImageFill";
 
 export function generateNameAsElement(node: FrameNode | RectangleNode, nameGroup: LayerName): string | null {
   const aspectRatio = node.width / node.height;

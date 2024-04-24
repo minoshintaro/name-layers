@@ -1,4 +1,4 @@
-import { isCenterAligned } from "./check";
+import { isCenterAligned } from "./isAutoLayout";
 
 function hasAncestor(node: SceneNode, callback: (ancestor: SceneNode) => boolean): boolean {
   let current = node.parent;

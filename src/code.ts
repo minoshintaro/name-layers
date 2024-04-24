@@ -17,15 +17,14 @@ figma.on('run', async ({ command }: RunEvent) => {
   const overriddenName: LayerName | null = await getDataInVariableCollection(COLLECTION_NAME);
   const nameGroup: LayerName = overriddenName || LAYER_NAME;
   const targetNodes = collectNodesInSelection(['FRAME', 'RECTANGLE']);
-  // let newName: string;
 
   switch (command) {
     case 'OVERRIDE_NAMES':
       if (overriddenName) {
-        figma.closePlugin('Already overridden');
+        figma.closePlugin('Already overridden with local variables');
       } else {
         setLocalVars();
-        figma.closePlugin('Create local variables');
+        figma.closePlugin('Created local variables');
       }
       break;
 
@@ -64,10 +63,10 @@ figma.on('run', async ({ command }: RunEvent) => {
 
         {
           const modifier = generateNameAsModifier(node, nameGroup);
-          if (modifier) node.name = (
-            node.name === DEFAULT_NAME.frame ||
-            node.name === DEFAULT_NAME.rectangle
-          ) ? modifier : `${node.name} ${modifier}`;
+          if (modifier) {
+            node.name = (node.name === DEFAULT_NAME.frame || node.name === DEFAULT_NAME.rectangle)
+              ? modifier : `${node.name} ${modifier}`;
+          }
         }
       }
       break;
