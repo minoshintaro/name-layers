@@ -15,7 +15,7 @@ figma.skipInvisibleInstanceChildren = true;
 
 figma.on('run', async ({ command }: RunEvent) => {
   const overriddenName: LayerName | null = await getDataInVariableCollection(COLLECTION_NAME);
-  const nameGroup: LayerName = overriddenName || LAYER_NAME;
+  const naming: LayerName = overriddenName || LAYER_NAME;
   const targetNodes = collectNodesInSelection(['FRAME', 'RECTANGLE']);
 
   switch (command) {
@@ -37,32 +37,32 @@ figma.on('run', async ({ command }: RunEvent) => {
 
     case 'RESET_NAMES':
       for (const node of targetNodes) {
-        if (node.type === 'FRAME' && matchWithReservedNames(node.name, nameGroup)) node.name = DEFAULT_NAME.frame;
-        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name, nameGroup)) node.name = DEFAULT_NAME.rectangle;
+        if (node.type === 'FRAME' && matchWithReservedNames(node.name, naming)) node.name = DEFAULT_NAME.frame;
+        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name, naming)) node.name = DEFAULT_NAME.rectangle;
       }
       break;
 
     case 'SET_NAMES':
       for (const node of targetNodes) {
-        if (node.type === 'FRAME' && matchWithReservedNames(node.name, nameGroup)) {
+        if (node.type === 'FRAME' && matchWithReservedNames(node.name, naming)) {
           node.name =
-            generateNameAsElement(node, nameGroup) ||
-            generateNameAsItem(node, nameGroup) ||
-            generateNameAsRoot(node, nameGroup) ||
-            generateNameAsContainer(node, nameGroup) ||
-            generateNameAsStack(node, nameGroup) ||
-            generateNameAsFlow(node, nameGroup) ||
+            generateNameAsElement(node, naming) ||
+            generateNameAsItem(node, naming) ||
+            generateNameAsRoot(node, naming) ||
+            generateNameAsContainer(node, naming) ||
+            generateNameAsStack(node, naming) ||
+            generateNameAsFlow(node, naming) ||
             DEFAULT_NAME.frame;
         }
 
-        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name, nameGroup)) {
+        if (node.type === 'RECTANGLE' && matchWithReservedNames(node.name, naming)) {
           node.name =
-            generateNameAsElement(node, nameGroup) ||
+            generateNameAsElement(node, naming) ||
             DEFAULT_NAME.rectangle;
         }
 
         {
-          const modifier = generateNameAsModifier(node, nameGroup);
+          const modifier = generateNameAsModifier(node, naming);
           if (modifier) {
             node.name = (node.name === DEFAULT_NAME.frame || node.name === DEFAULT_NAME.rectangle)
               ? modifier : `${node.name} ${modifier}`;
