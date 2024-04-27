@@ -2,12 +2,10 @@ import { LayerName, EMPTY } from "../settings";
 import { isCenterAligned } from "../utils/isAutoLayout";
 import { hasContainerAncestor } from "../utils/hasAncestor";
 
-export function generateNameAsContainer(node: FrameNode, nameGroup: LayerName): string | null {
-  const container = nameGroup.container === EMPTY ? null : nameGroup.container;
+export function generateNameAsContainer(node: FrameNode, naming: LayerName): string | null {
+  const container = naming.container === EMPTY ? null : naming.container;
 
   if (
-    // 子
-    node.children.length > 0 &&
     // 自身
     node.layoutMode !== 'NONE' &&
     node.maxWidth !== null &&
@@ -17,7 +15,6 @@ export function generateNameAsContainer(node: FrameNode, nameGroup: LayerName): 
     // 先祖
     !hasContainerAncestor(node)
   ) {
-    // return `${NAME.container} ${NAME.maxWidth}-${node.maxWidth}`;
     return container;
   }
   return null;
