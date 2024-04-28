@@ -1,7 +1,7 @@
-import { LayerName, EMPTY } from "../settings";
+import { LayerName, SKIP } from "../settings";
 
 export function generateNameAsRoot(node: FrameNode, naming: LayerName): string | null {
-  const root = naming.root === EMPTY ? null : naming.root;
+  const root = naming.root === SKIP ? null : naming.root;
 
   if (
     // 親

@@ -1,9 +1,9 @@
-import { COLLECTION_NAME, LAYER_NAME } from "../settings";
+import { COLLECTION_NAME, NAMING_CONVENTION } from "../settings";
 
 export function setLocalVars() {
   const collection = figma.variables.createVariableCollection(COLLECTION_NAME);
-  for (const key in LAYER_NAME) {
+  for (const key in NAMING_CONVENTION) {
     const variable = figma.variables.createVariable(key, collection, 'STRING');
-    variable.setValueForMode(collection.defaultModeId, LAYER_NAME[key]);
+    variable.setValueForMode(collection.defaultModeId, NAMING_CONVENTION[key]);
   }
 }

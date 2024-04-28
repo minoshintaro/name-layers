@@ -1,11 +1,10 @@
-import { LayerName, EMPTY } from "../settings";
+import { LayerName, SKIP } from "../settings";
 import { isCenterAligned } from "../utils/isAutoLayout";
 import { hasContainerAncestor } from "../utils/hasAncestor";
 
 export function generateNameAsContainer(node: FrameNode, naming: LayerName): string | null {
-  const container = naming.container === EMPTY ? null : naming.container;
-
   if (
+    naming.container !== SKIP &&
     // 自身
     node.layoutMode !== 'NONE' &&
     node.maxWidth !== null &&
@@ -15,7 +14,7 @@ export function generateNameAsContainer(node: FrameNode, naming: LayerName): str
     // 先祖
     !hasContainerAncestor(node)
   ) {
-    return container;
+    return naming.container;
   }
   return null;
 }

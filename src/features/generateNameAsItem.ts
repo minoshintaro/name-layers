@@ -1,8 +1,8 @@
-import { LayerName, EMPTY } from "../settings";
+import { LayerName, SKIP } from "../settings";
 import { isSameWidth } from "../utils/isSameWidth";
 
 export function generateNameAsItem(node: FrameNode, naming: LayerName): string | null {
-  const item = naming.item === EMPTY ? null : naming.item;
+  const item = naming.item === SKIP ? null : naming.item;
 
   if (
     node.children.length > 0 &&
