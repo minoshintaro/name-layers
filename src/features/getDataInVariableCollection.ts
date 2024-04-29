@@ -1,4 +1,4 @@
-import { LayerName } from "../settings";
+import { LayerName, NO_RENAME } from "../settings";
 
 export async function getDataInVariableCollection(target: string): Promise<LayerName | null> {
   const collections = await figma.variables.getLocalVariableCollectionsAsync();
@@ -12,7 +12,7 @@ export async function getDataInVariableCollection(target: string): Promise<Layer
 
     const key = variable.name;
     const value = variable.valuesByMode[targetCollection.defaultModeId];
-    if (typeof value === 'string') result[key] = value;
+    if (typeof value === 'string') result[key] = value === NO_RENAME ? null : value;
   }
 
   return result;

@@ -1,13 +1,16 @@
 export const COLLECTION_NAME: string = 'Layer names';
 
-export const SKIP: string = '{null}';
+export const NO_RENAME: string = '{null}';
 
-export interface LayerName {
+export const DEFAULT_NAME: {
   [key: string]: string;
-}
-export const DEFAULT_NAME: LayerName = {
+} = {
   frame: 'Frame',
   rectangle: 'Rectangle',
+}
+
+export interface LayerName {
+  [key: string]: string | null;
 }
 export const NAMING_CONVENTION: LayerName = {
   /** Wrapper */
@@ -17,18 +20,17 @@ export const NAMING_CONVENTION: LayerName = {
   /** Pair */
   grid: 'grid', // grid
   cell: 'item',
-  col: 'col', // flex-col
   row: 'row', // flex-row
-
-
-  /** Solo */
-  wrap: 'wrap', // flex-wrap
-  stack: 'stack', // space-y
-  flex: 'flex', // flex
-
+  col: 'col', // flex-col
   center: 'center', // justify-center
-  right: 'right',
-  justification: 'justification', // justify-between
+  // right: 'right',
+  // justification: 'justification', // justify-between
+
+  /** Single */
+  verticalLayout: 'stack', // space-y
+  horizontalLayout: 'flex', // flex
+  wrap: 'wrap', // flex-wrap
+
   image: 'image',
   space: 'space',
   line: 'line',
