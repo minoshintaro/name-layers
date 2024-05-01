@@ -1,7 +1,7 @@
-import { LayerName, DEFAULT_NAME } from "../settings";
+import { LayerName } from "../settings";
 
 export function collectNaming(namings: (LayerName | null)[]): Set<string> {
-  const nameSet = new Set<string>(Object.values(DEFAULT_NAME));
+  const nameSet = new Set<string>();
 
   for (const naming of namings) {
     if (!naming) continue;

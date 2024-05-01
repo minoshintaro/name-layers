@@ -7,7 +7,7 @@ export function generateNameForWrapper(node: FrameNode, naming: LayerName): stri
     node.parent &&
     (node.parent.type === 'PAGE' || node.parent.type === 'SECTION')
   ) {
-   return naming.root;
+    return naming.root;
   } else if (
     node.maxWidth &&
     node.layoutMode !== 'NONE' &&

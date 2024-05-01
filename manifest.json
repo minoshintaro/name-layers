@@ -8,6 +8,9 @@
   "editorType": [
     "figma"
   ],
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  },
   "menu": [
     { "name": "Set Names", "command": "SET_NAMES" },
     { "name": "Reset Names", "command": "RESET_NAMES" },

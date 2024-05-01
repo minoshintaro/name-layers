@@ -11,7 +11,8 @@ figma.skipInvisibleInstanceChildren = true;
 figma.on('run', async ({ command }: RunEvent) => {
   const overriddenNaming: LayerName | null = await getDataInVariableCollection(COLLECTION_NAME);
   const currentNaming: LayerName = overriddenNaming || NAMING_CONVENTION;
-  const reservedNames: Set<string> = collectNaming([overriddenNaming, NAMING_CONVENTION]);
+  const reservedNames: Set<string> = collectNaming([overriddenNaming, NAMING_CONVENTION, DEFAULT_NAME]);
+
   const targetNodes = collectNodesInSelection(['FRAME', 'RECTANGLE']);
 
   if (command === 'OVERRIDE_NAMING') {
@@ -26,12 +27,12 @@ figma.on('run', async ({ command }: RunEvent) => {
     const defaultName = DEFAULT_NAME[node.type.toLowerCase()];
     const canRename = matchWithReservedNames(node.name, reservedNames);
 
-    if (command === 'RESET_ALL') {
-      node.name = defaultName;
+    if (command === 'SET_NAMES' && canRename) {
+      node.name = generateName(node, currentNaming) || defaultName;
     } else if (command === 'RESET_NAMES' && canRename) {
       node.name = defaultName;
-    } else if (command === 'SET_NAMES' && canRename) {
-      node.name = generateName(node, currentNaming) || defaultName;
+    } else if (command === 'RESET_ALL') {
+      node.name = defaultName;
     }
   }
 
