@@ -8,10 +8,15 @@
   "editorType": [
     "figma"
   ],
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  },
   "menu": [
-    { "name": "Set Names", "command": "SET_NAME" },
-    { "name": "Reset Names", "command": "RESET_NAME" },
+    { "name": "Set Names", "command": "SET_NAMES" },
+    { "name": "Reset Names", "command": "RESET_NAMES" },
     { "separator": true },
-    { "name": "Reset Names of All Frames", "command": "RESET_ALL_NAMES" }
+    { "name": "Reset All Frames and Rectangles", "command": "RESET_ALL" },
+    { "separator": true },
+    { "name": "Override Naming with Local Variables", "command": "OVERRIDE_NAMING" }
   ]
 }
