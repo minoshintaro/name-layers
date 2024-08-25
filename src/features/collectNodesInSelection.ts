@@ -1,12 +1,15 @@
-import { hasInstanceAncestor } from "../utils/hasAncestor";
+import { hasAncestor } from "../utils/hasAncestor";
 
-export function collectNodesInSelection(types: NodeType[]): SceneNode[] {
-  const results = figma.currentPage.selection.reduce((results: SceneNode[], node: SceneNode) => {
-    if (types.includes(node.type)) {
-      results.push(node);
+type TargetType = { types: Array<NodeType> };
+
+export function collectNodeSetInSelection(input: TargetType): Set<SceneNode> {
+  const nodeSet = new Set<SceneNode>();
+
+  for (const node of figma.currentPage.selection) {
+    if (input.types.includes(node.type)) {
+      nodeSet.add(node);
     }
 
-    // typesWithChildren: ['BOOLEAN_OPERATION', 'INSTANCE', 'COMPONENT', 'COMPONENT_SET', 'FRAME', 'GROUP', 'SECTION', 'PAGE'];
     if (
       node.type === 'COMPONENT' ||
       node.type === 'COMPONENT_SET' ||
@@ -14,12 +17,14 @@ export function collectNodesInSelection(types: NodeType[]): SceneNode[] {
       node.type === 'GROUP' ||
       node.type === 'SECTION'
     ) {
-      const subNodes = node.findAllWithCriteria({ types });
-      results.push(...subNodes);
+      const subNodes = node.findAllWithCriteria(input);
+      subNodes.forEach(subNode => {
+        if (!hasAncestor(subNode, 'instance')) {
+          nodeSet.add(subNode);
+        }
+      });
     }
+  }
 
-    return results;
-  }, []);
-
-  return results.filter(node => !hasInstanceAncestor(node));
+  return nodeSet;
 }

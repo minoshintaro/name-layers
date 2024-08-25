@@ -1,28 +1,26 @@
 import { isCenterAligned } from "./isAutoLayout";
 
-function hasAncestor(node: SceneNode, callback: (ancestor: SceneNode) => boolean): boolean {
-  let current = node.parent;
-  while (current && 'visible' in current) {
-    if (callback(current)) return true;
-    current = current.parent;
+type Callback = (target: SceneNode) => boolean;
+
+export function hasAncestor(node: SceneNode, type: 'instance' | 'container'): boolean {
+  const findNodeInTree = (target: SceneNode, callback: Callback): boolean => {
+    let current = target.parent;
+    while (current !== null && 'visible' in current) {
+      if (callback(current)) return true;
+      current = current.parent;
+    }
+    return false;
   }
-  return false;
-}
 
-export function hasInstanceAncestor(node: SceneNode): boolean {
-  return hasAncestor(node, (ancestor) => (
-    ancestor.type === 'INSTANCE'
-  ));
-}
-
-export function hasContainerAncestor(node: SceneNode): boolean {
-  return hasAncestor(node, (ancestor) => (
-    // 自身
-    ancestor.type === 'FRAME' &&
-    ancestor.layoutMode !== 'NONE' &&
-    ancestor.maxWidth !== null &&
-    // 親
-    ancestor.parent !== null &&
-    isCenterAligned(ancestor.parent)
-  ));
+  switch (type) {
+    case 'instance':
+      return findNodeInTree(node, (target: SceneNode): boolean => target.type === 'INSTANCE');
+    case 'container':
+      return findNodeInTree(node, (target: SceneNode): boolean => (
+        target.type === 'FRAME' && target.layoutMode !== 'NONE' && target.maxWidth !== null &&
+        target.parent !== null && (target.parent.type === 'FRAME' || target.parent.type === 'COMPONENT') && isCenterAligned(target.parent)
+      ));
+    default:
+      return false;
+  }
 }
