@@ -1,25 +1,22 @@
-import { NamingConvention, DEFAULT_NAME } from "../settings";
+import { Naming } from "../settings";
+import { isDefaultName } from "./isTrue";
 import { regex } from "./regex";
+import { trimNumericSuffix } from "./trim";
 
-export function matchNamingConventions(initial: NamingConvention, overridden: NamingConvention): boolean {
-  return Object.keys(initial).length === Object.keys(overridden).length &&
-    Object.keys(initial).every(key => initial[key] === overridden[key])
-}
-
-export function matchWithNames(input: string, namingSet: Set<string>): boolean {
-  const isDefaultName = (words: string[]): boolean => (
-    words.length === 2 &&
-    Object.values(DEFAULT_NAME).includes(words[0]) &&
-    regex.number.test(words[1])
+export function matchBothNamings(initial: Naming, current: Naming): boolean {
+  return (
+    Object.keys(initial).length === Object.keys(current).length &&
+    Object.keys(initial).every(key => initial[key] === current[key])
   );
-
-  const trimSuffix = (word: string) => word.replace(regex.numericSuffix, '');
-
-  const words = input.split(' ');
-
-  return isDefaultName(words) || words.every(word => namingSet.has(trimSuffix(word)));
 }
 
-export function matchCommentOut(input: string): boolean {
-  return regex.comment.test(input);
+export function matchWithNaming(name: string, namings: Set<string>): boolean {
+  return (
+    isDefaultName(name) ||
+    name.split(' ').every(word => namings.has(trimNumericSuffix(word)))
+  );
+}
+
+export function matchCommentOut(word: string): boolean {
+  return regex.comment.test(word);
 }

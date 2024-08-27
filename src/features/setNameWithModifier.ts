@@ -1,6 +1,6 @@
-import { NamingConvention } from "../settings";
+import { Naming } from "../settings";
 
-type Modifier = { node: FrameNode | RectangleNode, naming: NamingConvention };
+type Modifier = { node: FrameNode | RectangleNode, naming: Naming };
 
 export function setNameWithModifier(name: string, modifier: Modifier): string {
   const { node, naming } = modifier;

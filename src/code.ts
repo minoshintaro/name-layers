@@ -1,66 +1,45 @@
-import { NamingConvention, COLLECTION_NAME, DEFAULT_NAME } from "./settings";
-import { collectNodeSetInSelection } from "./features/collectNodesInSelection";
+import { Naming, COLLECTION_NAME, LAYER_NAME, namingConvention } from "./settings";
+import { collectNodesInSelection } from "./features/collectNodesInSelection";
+import { createDate } from "./features/createDate";
 import { figmaVariables } from "./features/figmaVariables";
 import { findMissingNamings } from "./features/findMissingNamings";
 import { generateName } from "./features/generateName";
-import { matchNamingConventions, matchWithNames } from "./utils/match";
-
-const initialNaming: NamingConvention = {
-  /** Wrapper */
-  root: 'wrapper',
-  container: 'container',
-
-  /** Pair */
-  grid: 'grid',
-  cell: 'cell',
-  row: 'row',
-  col: 'col',
-  center: 'center',
-
-  /** Single */
-  verticalLayout: 'stack',
-  horizontalLayout: 'flex',
-  wrap: 'wrap',
-
-  image: 'image',
-  space: 'space',
-  line: 'line',
-
-  /** Option */
-  minWidth: 'min',
-  maxWidth: 'max',
-};
+import { getNaming } from "./features/getNaming";
+import { matchBothNamings, matchWithNaming } from "./utils/match";
 
 figma.skipInvisibleInstanceChildren = true;
 
 figma.on('run', async ({ command }: RunEvent) => {
   const currentCollection: VariableCollection | null = await figmaVariables.findCollection(COLLECTION_NAME);
 
-  const overriddenNaming: NamingConvention | null = currentCollection ? await figmaVariables.getNamingVariables(currentCollection) : null;
-  const currentNaming: NamingConvention = overriddenNaming || initialNaming;
+  const defaultNaming: Naming = getNaming(namingConvention);
+  const overriddenNaming: Naming | null = currentCollection ? await figmaVariables.generateNaming(currentCollection) : null;
+  const currentNaming: Naming = overriddenNaming || defaultNaming;
+
+  console.log('test:', defaultNaming, overriddenNaming, currentNaming);
 
   const reservedNames = new Set<string>([
-    ...Object.values(DEFAULT_NAME),
-    ...Object.values(initialNaming),
+    ...Object.values(LAYER_NAME),
+    ...Object.values(defaultNaming),
     ...(overriddenNaming ? Object.values(overriddenNaming) : [])
   ]);
 
-  const targetNodes = collectNodeSetInSelection({ types: ['FRAME', 'RECTANGLE'] });
+  const targetNodes = collectNodesInSelection({ types: ['FRAME', 'RECTANGLE'] });
 
   switch (command) {
     case 'OVERRIDE_NAMING':
       if (!currentCollection) {
         const newCollection = figmaVariables.createCollection(COLLECTION_NAME);
-        figmaVariables.setNamingVariables(newCollection, initialNaming);
+        figmaVariables.addVariables(defaultNaming, namingConvention, newCollection);
         figma.closePlugin('Created a collection in the local variables');
         return;
       }
 
-      if (overriddenNaming && !matchNamingConventions(initialNaming, overriddenNaming)) {
-        const diffs = findMissingNamings(initialNaming, overriddenNaming);
+      if (overriddenNaming && !matchBothNamings(defaultNaming, overriddenNaming)) {
+        const diffs = findMissingNamings(defaultNaming, overriddenNaming);
 
         if (diffs) {
-          figmaVariables.setNamingVariables(currentCollection, diffs);
+          figmaVariables.addVariables(diffs, namingConvention, currentCollection);
           figma.closePlugin('Restored the deleted variables');
           return;
         }
@@ -71,25 +50,53 @@ figma.on('run', async ({ command }: RunEvent) => {
 
     case 'SET_NAMES':
       for (const node of targetNodes) {
-        if (matchWithNames(node.name, reservedNames)) {
-          node.name = generateName(node, currentNaming) || DEFAULT_NAME[node.type];
+        if (matchWithNaming(node.name, reservedNames)) {
+          node.name = generateName(node, currentNaming, namingConvention) || LAYER_NAME[node.type];
         }
       }
       break;
 
     case 'RESET_NAMES':
       for (const node of targetNodes) {
-        if (matchWithNames(node.name, reservedNames)) {
-          node.name = DEFAULT_NAME[node.type];
+        if (matchWithNaming(node.name, reservedNames)) {
+          node.name = LAYER_NAME[node.type];
         }
       }
       break;
 
     case 'RESET_ALL':
       for (const node of targetNodes) {
-        node.name = DEFAULT_NAME[node.type];
+        node.name = LAYER_NAME[node.type];
       }
       break;
+
+    case 'ADD_SUFFIX': {
+      // _{width}x{height}_{date}
+      for (const node of figma.currentPage.selection) {
+        if (node.type === 'FRAME') {
+          node.name = `${node.name} ${node.width}x${node.height}`;
+        }
+      }
+      break;
+    }
+
+    case 'ADD_SIZE':
+      for (const node of figma.currentPage.selection) {
+        if (node.type === 'FRAME') {
+          node.name = `${node.name} ${node.width}x${node.height}`;
+        }
+      }
+      break;
+
+    case 'ADD_DATE': {
+      const date = createDate();
+      for (const node of figma.currentPage.selection) {
+        if (node.type === 'FRAME') {
+          node.name = `${node.name} ${date}`;
+        }
+      }
+      break;
+    }
 
     default:
       break;

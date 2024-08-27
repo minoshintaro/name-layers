@@ -1,4 +1,4 @@
-import { isCenterAligned } from "./isAutoLayout";
+import { hasCenterAligned } from "./autoLayout";
 
 type Callback = (target: SceneNode) => boolean;
 
@@ -17,8 +17,7 @@ export function hasAncestor(node: SceneNode, type: 'instance' | 'container'): bo
       return findNodeInTree(node, (target: SceneNode): boolean => target.type === 'INSTANCE');
     case 'container':
       return findNodeInTree(node, (target: SceneNode): boolean => (
-        target.type === 'FRAME' && target.layoutMode !== 'NONE' && target.maxWidth !== null &&
-        target.parent !== null && (target.parent.type === 'FRAME' || target.parent.type === 'COMPONENT') && isCenterAligned(target.parent)
+        target.type === 'FRAME' && target.layoutMode !== 'NONE' && target.maxWidth !== null && hasCenterAligned(target)
       ));
     default:
       return false;

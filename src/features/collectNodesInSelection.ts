@@ -1,13 +1,13 @@
 import { hasAncestor } from "../utils/hasAncestor";
 
-type TargetType = { types: Array<NodeType> };
+type Input = { types: Array<NodeType> };
 
-export function collectNodeSetInSelection(input: TargetType): Set<SceneNode> {
-  const nodeSet = new Set<SceneNode>();
+export function collectNodesInSelection(input: Input): Set<SceneNode> {
+  const nodes = new Set<SceneNode>();
 
   for (const node of figma.currentPage.selection) {
     if (input.types.includes(node.type)) {
-      nodeSet.add(node);
+      nodes.add(node);
     }
 
     if (
@@ -20,11 +20,11 @@ export function collectNodeSetInSelection(input: TargetType): Set<SceneNode> {
       const subNodes = node.findAllWithCriteria(input);
       subNodes.forEach(subNode => {
         if (!hasAncestor(subNode, 'instance')) {
-          nodeSet.add(subNode);
+          nodes.add(subNode);
         }
       });
     }
   }
 
-  return nodeSet;
+  return nodes;
 }

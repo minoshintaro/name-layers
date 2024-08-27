@@ -14,8 +14,10 @@
   "menu": [
     { "name": "Set Names", "command": "SET_NAMES" },
     { "name": "Reset Names", "command": "RESET_NAMES" },
-    { "separator": true },
     { "name": "Reset All Frames and Rectangles", "command": "RESET_ALL" },
+    { "separator": true },
+    { "name": "Add Date", "command": "ADD_DATE" },
+    { "name": "Add Size", "command": "ADD_SIZE" },
     { "separator": true },
     { "name": "Override Naming with Local Variables", "command": "OVERRIDE_NAMING" }
   ]

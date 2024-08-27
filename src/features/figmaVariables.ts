@@ -1,5 +1,7 @@
-import { NamingConvention, ANONYMOUS } from "../settings";
+import { Naming, NamingConvention, ANONYMOUS } from "../settings";
+import { hasVariableKey } from "../utils/hasVariableKye";
 import { matchCommentOut } from "../utils/match";
+import { trimVariableGroupName } from "../utils/trim";
 
 function createCollection(name: string): VariableCollection {
   return figma.variables.createVariableCollection(name);
@@ -10,42 +12,44 @@ async function findCollection(name: string): Promise<VariableCollection | null> 
   return collections.find(collection => collection.name === name) || null;
 }
 
-async function getNamingVariables(collection: VariableCollection): Promise<NamingConvention | null> {
+async function generateNaming(collection: VariableCollection): Promise<Naming | null> {
+  const naming: Naming = {};
   const variables = await Promise.all(
     collection.variableIds.map(variableId => figma.variables.getVariableByIdAsync(variableId))
   );
 
-  const namingConvention = variables.reduce((result: NamingConvention, variable) => {
-    if (variable) {
-      const key = variable.name;
-      const value = variable.valuesByMode[collection.defaultModeId];
-      if (typeof value === "string" && value !== ANONYMOUS && !matchCommentOut(value)) {
-        result[key] = value;
-      }
-    }
-    return result;
-  }, {});
+  for (const variable of variables) {
+    if (!variable) continue;
 
-  return Object.keys(namingConvention).length > 0 ? namingConvention : null;
+    const key = trimVariableGroupName(variable.name);
+    const value = variable.valuesByMode[collection.defaultModeId];
+
+    if (typeof value === "string" && value !== ANONYMOUS && !matchCommentOut(value)) {
+      naming[key] = value;
+    }
+  }
+
+  return Object.keys(naming).length > 0 ? naming : null;
 }
 
-function setNamingVariables(collection: VariableCollection, naming: NamingConvention): void {
-  const hasKey = (input: string): boolean => collection.variableIds.some(variableId => {
-    const variable = figma.variables.getVariableById(variableId);
-    return variable && variable.name === input;
-  });
-
+function addVariables(naming: Naming, convention: NamingConvention, collection: VariableCollection): void {
   for (const key in naming) {
-    if (hasKey(key)) continue;
-    const variable = figma.variables.createVariable(key, collection, 'STRING');
-    variable.setValueForMode(collection.defaultModeId, naming[key]);
-    variable.scopes = [];
+    if (hasVariableKey(key, collection)) continue;
+
+    const conventionKey = key as keyof NamingConvention;
+    const groupName = convention.hasOwnProperty(conventionKey) ? convention[conventionKey].group : '';
+    const name = groupName ? `${groupName}/${key}` : key;
+
+    const newVariable = figma.variables.createVariable(name, collection, 'STRING');
+
+    newVariable.setValueForMode(collection.defaultModeId, naming[key]);
+    newVariable.scopes = [];
   }
 }
 
 export const figmaVariables = {
+  addVariables,
   createCollection,
   findCollection,
-  getNamingVariables,
-  setNamingVariables
+  generateNaming,
 }
