@@ -6,32 +6,17 @@ export interface Naming {
   [key: string]: string;
 }
 
-export interface Convention<T extends SceneNode> {
+export interface Convention {
   group: string;
   name: string;
   description: string;
   modifier: boolean;
-  condition: (node: T) => boolean;
+  condition: (node: any) => boolean;
 }
 
-export type NamingConvention = {
-  root: Convention<FrameNode>;
-  container: Convention<FrameNode>;
-  grid: Convention<FrameNode | ComponentNode>;
-  cell: Convention<FrameNode>;
-  row: Convention<FrameNode>;
-  col: Convention<FrameNode>;
-  center: Convention<FrameNode>;
-  verticalLayout: Convention<FrameNode>;
-  horizontalLayout: Convention<FrameNode>;
-  wrap: Convention<FrameNode>;
-  space: Convention<FrameNode | RectangleNode>;
-  image: Convention<FrameNode | RectangleNode>;
-  line: Convention<FrameNode | RectangleNode>;
-  minWidth: Convention<FrameNode>;
-  maxWidth: Convention<FrameNode>;
-  suffix: Convention<FrameNode>;
-};
+export interface NamingConvention {
+  [key: string]: Convention;
+}
 
 export const ANONYMOUS: string = '{null}'; // Deprecated
 export const COLLECTION_NAME: string = 'Plugin: Name Layers';
@@ -40,7 +25,7 @@ export const LAYER_NAME: Naming = {
   RECTANGLE: 'Rectangle',
 };
 
-export const namingConvention: NamingConvention = {
+export const initialNamingConvention: NamingConvention = {
   root: {
     group: 'Layout',
     name: 'wrapper',
@@ -185,7 +170,7 @@ export const namingConvention: NamingConvention = {
   },
   suffix: {
     group: 'Suffix',
-    name: '_{width}x{height}_{date}',
+    name: '_{width}x{height}_{yy}{mm}{dd}',
     description: 'A frame with a suffix',
     modifier: true,
     condition: (node: FrameNode): boolean => true,

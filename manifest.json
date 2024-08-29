@@ -16,8 +16,8 @@
     { "name": "Reset Names", "command": "RESET_NAMES" },
     { "name": "Reset All Frames and Rectangles", "command": "RESET_ALL" },
     { "separator": true },
-    { "name": "Add Date", "command": "ADD_DATE" },
-    { "name": "Add Size", "command": "ADD_SIZE" },
+    { "name": "Add Suffix", "command": "ADD_SUFFIX" },
+    { "name": "Remove Suffix", "command": "REMOVE_SUFFIX" },
     { "separator": true },
     { "name": "Override Naming with Local Variables", "command": "OVERRIDE_NAMING" }
   ]

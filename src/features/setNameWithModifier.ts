@@ -1,17 +1,22 @@
-import { Naming } from "../settings";
+import { NamingConvention } from "../settings";
 
-type Modifier = { node: FrameNode | RectangleNode, naming: Naming };
+type Props = {
+  name: string;
+  minWidth: number | null;
+  maxWidth: number | null;
+  convention: NamingConvention
+};
 
-export function setNameWithModifier(name: string, modifier: Modifier): string {
-  const { node, naming } = modifier;
+export function setNameWithModifier(props: Props): string {
+  const { name, minWidth, maxWidth, convention } = props;
   const words = [name];
 
-  if ('minWidth' in naming && node.minWidth !== null) {
-    words.push(`${naming.minWidth}-${node.minWidth}`);
+  if (minWidth !== null) {
+    words.push(`${convention.minWidth.name}-${minWidth}`);
   }
 
-  if ('maxWidth' in naming && node.maxWidth !== null) {
-    words.push(`${naming.maxWidth}-${node.maxWidth}`);
+  if (maxWidth !== null) {
+    words.push(`${convention.maxWidth.name}-${maxWidth}`);
   }
 
   return words.join(' ');

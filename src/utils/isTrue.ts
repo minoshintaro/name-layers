@@ -4,9 +4,8 @@ import { regex } from "./regex";
 export function isDefaultName(name: string): boolean {
   const words = name.split(' ');
   return (
-    words.length === 2 &&
     Object.values(LAYER_NAME).includes(words[0]) &&
-    regex.number.test(words[1])
+    (words.length === 1 || (words.length === 2 && regex.number.test(words[1])))
   );
 }
 
