@@ -1,6 +1,6 @@
 import { trimVariableGroupName } from "../utils/edit";
 
-export function getKeysInCollection(collection: VariableCollection): Set<string> {
+export function getKeysFromCollection(collection: VariableCollection): Set<string> {
   const keys = new Set<string>();
 
   for (const variableId of collection.variableIds) {
@@ -12,4 +12,10 @@ export function getKeysInCollection(collection: VariableCollection): Set<string>
   }
 
   return keys;
+}
+
+export async function getVariablesFromCollection(collection: VariableCollection): Promise<(Variable | null)[]> {
+  return await Promise.all(
+    collection.variableIds.map(variableId => figma.variables.getVariableByIdAsync(variableId))
+  );
 }

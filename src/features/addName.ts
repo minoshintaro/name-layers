@@ -7,15 +7,15 @@ type Props = {
   convention: NamingConvention
 };
 
-export function setNameWithModifier(props: Props): string {
+export function addModifierToName(props: Props): string {
   const { name, minWidth, maxWidth, convention } = props;
   const words = [name];
 
-  if (minWidth !== null) {
+  if (minWidth !== null && convention.hasOwnProperty('minWidth')) {
     words.push(`${convention.minWidth.name}-${minWidth}`);
   }
 
-  if (maxWidth !== null) {
+  if (maxWidth !== null && convention.hasOwnProperty('maxWidth')) {
     words.push(`${convention.maxWidth.name}-${maxWidth}`);
   }
 

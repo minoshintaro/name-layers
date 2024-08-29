@@ -1,50 +1,36 @@
-import { Naming, NamingConvention } from "../settings";
-import { setNameWithModifier } from "./setNameWithModifier";
+import { NamingConvention } from "../settings";
+import { addModifierToName } from "./addName";
 
 export function generateName(node: SceneNode, convention: NamingConvention): string | null {
-
-  if (node.type === 'FRAME' && node.parent) {
-
-    // Root wrapper
-    for (const key of ['root']) {
+  const handleNaming = (keys: string[]): string | null => {
+    for (const key of keys) {
       if (convention.hasOwnProperty(key) && convention[key].condition(node)) {
         const { name, modifier } = convention[key];
         const { minWidth, maxWidth } = node;
-        return modifier ? setNameWithModifier({ name, minWidth, maxWidth, convention }) : name;
+        return modifier ? addModifierToName({ name, minWidth, maxWidth, convention }) : name;
       }
     }
+    return null;
+  }
 
-    // Elements
+  if (node.type === 'FRAME' && node.parent) {
+    const wrapper = handleNaming(['root']);
+    if (wrapper) return wrapper;
+
     if (node.children.length === 0) {
-      for (const key of ['space', 'image', 'line']) {
-        if (convention.hasOwnProperty(key) && convention[key].condition(node)) {
-          const { name, modifier } = convention[key];
-          const { minWidth, maxWidth } = node;
-          return modifier ? setNameWithModifier({ name, minWidth, maxWidth, convention }) : name;
-        }
-      }
+      const element = handleNaming(['space', 'image', 'line']);
+      if (element) return element;
     }
 
-    // Under wrapper
     if (node.parent.type === 'FRAME' || node.parent.type === 'COMPONENT') {
-      for (const key of ['container', 'cell', 'grid', 'row', 'col', 'center', 'verticalLayout', 'horizontalLayout', 'wrap']) {
-        if (convention.hasOwnProperty(key) && convention[key].condition(node)) {
-          const { name, modifier } = convention[key];
-          const { minWidth, maxWidth } = node;
-          return modifier ? setNameWithModifier({ name, minWidth, maxWidth, convention }) : name;
-        }
-      }
+      const flexbox = handleNaming(['container', 'cell', 'grid', 'row', 'col', 'center', 'verticalLayout', 'horizontalLayout', 'wrap']);
+      if (flexbox) return flexbox;
     }
   }
 
   if (node.type === 'RECTANGLE') {
-    for (const key of ['space', 'image', 'line']) {
-      if (convention.hasOwnProperty(key) && convention[key].condition(node)) {
-        const { name, modifier } = convention[key];
-        const { minWidth, maxWidth } = node;
-        return modifier ? setNameWithModifier({ name, minWidth, maxWidth, convention }) : name;
-      }
-    }
+    const element = handleNaming(['space', 'image', 'line']);
+    if (element) return element;
   }
 
   return null;

@@ -1,8 +1,8 @@
 import { NamingConvention } from "../settings";
-import { getKeysInCollection } from "./getKeys";
+import { getKeysFromCollection } from "./getFromCollection";
 
 export function addVariablesToCollection(convention: NamingConvention, collection: VariableCollection): void {
-  const currentKeys = getKeysInCollection(collection);
+  const currentKeys = getKeysFromCollection(collection);
 
   for (const key in convention) {
     if (currentKeys.has(key)) continue;

@@ -1,5 +1,5 @@
 import { NamingConvention } from "../settings";
-import { getKeysInCollection } from "./getKeys";
+import { getKeysFromCollection, getVariablesFromCollection } from "./getFromCollection";
 import { matchCommentOut } from "../utils/match";
 import { trimVariableGroupName } from "../utils/edit";
 
@@ -7,9 +7,7 @@ export async function generateNamingConvention(initial: NamingConvention, collec
   const result: NamingConvention = {};
 
   const initialKeys = new Set(Object.keys(initial)); // root, container, grid ...
-  const currentVariables = await Promise.all(
-    collection.variableIds.map(variableId => figma.variables.getVariableByIdAsync(variableId))
-  );
+  const currentVariables = await getVariablesFromCollection(collection);
 
   for (const variable of currentVariables) {
     if (!variable) continue;
@@ -26,7 +24,7 @@ export async function generateNamingConvention(initial: NamingConvention, collec
 
 export function generateDiffNamingConvention(convention: NamingConvention, collection: VariableCollection): NamingConvention {
   const diff: NamingConvention = {};
-  const collectionKeys = getKeysInCollection(collection);
+  const collectionKeys = getKeysFromCollection(collection);
 
   for (const key in convention) {
     if (collectionKeys.has(key)) continue;

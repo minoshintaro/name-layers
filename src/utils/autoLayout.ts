@@ -33,7 +33,7 @@ function hasParentWithCondition(node: FrameNode, condition: Condition): boolean 
   );
 }
 
-export function hasCenterAligned(node: FrameNode): boolean {
+export function hasContainerAlignedCenter(node: FrameNode): boolean {
   return hasParentWithCondition(node, isCenterAligned);
 }
 

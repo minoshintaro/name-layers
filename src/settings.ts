@@ -1,10 +1,6 @@
-import { isCenterAligned, isGridContainer, hasCenterAligned, hasFlexContainer, hasGridContainer } from "./utils/autoLayout";
+import { isCenterAligned, isGridContainer, hasContainerAlignedCenter, hasFlexContainer, hasGridContainer } from "./utils/autoLayout";
 import { hasAncestor } from "./utils/hasAncestor";
 import { isImageFills } from "./utils/isTrue";
-
-export interface Naming {
-  [key: string]: string;
-}
 
 export interface Convention {
   group: string;
@@ -20,7 +16,7 @@ export interface NamingConvention {
 
 export const ANONYMOUS: string = '{null}'; // Deprecated
 export const COLLECTION_NAME: string = 'Plugin: Name Layers';
-export const LAYER_NAME: Naming = {
+export const LAYER_NAME: { [key: string]: string; } = {
   FRAME: 'Frame',
   RECTANGLE: 'Rectangle',
 };
@@ -43,7 +39,7 @@ export const initialNamingConvention: NamingConvention = {
     modifier: true,
     condition: (node: FrameNode): boolean => (
       node.maxWidth !== null &&
-      hasCenterAligned(node) &&
+      hasContainerAlignedCenter(node) &&
       !hasAncestor(node, 'container')
     ),
   },

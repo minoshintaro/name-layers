@@ -1,6 +1,3 @@
-import { splitVariableWord } from "../utils/edit";
-import { regex } from "../utils/regex";
-
 export const generateSuffix = (format: string, width: number, height: number, date: Date) => (
   format
     .replace('{width}', `${width}`)
