@@ -55,7 +55,7 @@ export const initialNamingConvention: NamingConvention = {
   cell: {
     group: 'Layout',
     name: 'cell',
-    description: '',
+    description: 'Frames of the same width within a horizontal layout',
     modifier: true,
     condition: (node: FrameNode): boolean => (
       hasGridContainer(node)
@@ -64,7 +64,7 @@ export const initialNamingConvention: NamingConvention = {
   row: {
     group: 'Layout',
     name: 'row',
-    description: '',
+    description: 'A frame within a horizontal layout that is also horizontal',
     modifier: true,
     condition: (node: FrameNode): boolean => (
       node.layoutMode === 'HORIZONTAL' &&
@@ -74,7 +74,7 @@ export const initialNamingConvention: NamingConvention = {
   col: {
     group: 'Layout',
     name: 'col',
-    description: '',
+    description: 'A frame within a horizontal layout that is also vertical',
     modifier: true,
     condition: (node: FrameNode): boolean => (
       node.layoutMode === 'VERTICAL' &&
@@ -84,7 +84,7 @@ export const initialNamingConvention: NamingConvention = {
   center: {
     group: 'Layout',
     name: 'center',
-    description: 'A frame with auto layout that centers the items',
+    description: 'A frame that aligns items to the center',
     modifier: true,
     condition: (node: FrameNode): boolean => (
       node.children.length > 0 &&
